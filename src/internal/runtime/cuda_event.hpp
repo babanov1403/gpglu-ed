@@ -7,7 +7,7 @@
 
 #include <minirt/core/cuda_error.hpp>
 
-namespace minirt::utils {
+namespace minirt::internal {
 class CudaEvent {
   public:
     CudaEvent() { MINIRT_CUDA_CHECK(cudaEventCreate(&event_)); }
@@ -42,4 +42,4 @@ class CudaEvent {
   private:
     cudaEvent_t event_{nullptr};
 };
-} // namespace minirt::utils
+} // namespace minirt::internal

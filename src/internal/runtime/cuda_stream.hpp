@@ -7,7 +7,7 @@
 
 #include <minirt/core/cuda_error.hpp>
 
-namespace minirt::utils {
+namespace minirt::internal {
 class CudaStream {
   public:
     CudaStream() { MINIRT_CUDA_CHECK(cudaStreamCreateWithFlags(&stream_, cudaStreamNonBlocking)); }
@@ -42,4 +42,4 @@ class CudaStream {
   private:
     cudaStream_t stream_{nullptr};
 };
-} // namespace minirt::utils
+} // namespace minirt::internal
