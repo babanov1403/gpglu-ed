@@ -2,6 +2,9 @@
 
 Single-GPU experimental LLM inference runtime на C++/CUDA для одной decoder-only архитектуры с заменяемыми backend-ами операторов, собственным KV-cache, простым scheduler и воспроизводимыми исследованиями производительности.
 
+[План разработки](docs/plan.md) · [Правила тикетов](docs/workflow.md) ·
+[Correctness и измерения](docs/validation.md)
+
 ## Требования
 
 - CMake 3.25 или новее;
