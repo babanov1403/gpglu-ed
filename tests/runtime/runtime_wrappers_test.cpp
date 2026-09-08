@@ -1,6 +1,7 @@
 #include <minirt/core/cuda_error.hpp>
-#include <runtime/cuda_event.hpp>
-#include <runtime/cuda_stream.hpp>
+#include <minirt/internal/runtime/cuda_event.hpp>
+#include <minirt/internal/runtime/cuda_stream.hpp>
+#include <minirt/test/test_require.hpp>
 
 #include <cuda_runtime_api.h>
 
@@ -14,14 +15,6 @@
 
 using minirt::internal::CudaEvent;
 using minirt::internal::CudaStream;
-
-#define MINIRT_TEST_REQUIRE(condition)                                                             \
-    do {                                                                                           \
-        if (!(condition)) {                                                                        \
-            std::cerr << __FILE__ << ':' << __LINE__ << ": requirement failed: " #condition "\n";  \
-            return EXIT_FAILURE;                                                                   \
-        }                                                                                          \
-    } while (false)
 
 static_assert(!std::is_copy_constructible_v<CudaStream>);
 static_assert(!std::is_copy_assignable_v<CudaStream>);

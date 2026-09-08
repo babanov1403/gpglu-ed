@@ -13,11 +13,11 @@ project(
     LANGUAGES CXX CUDA
 )
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_CUDA_STANDARD 17)
+set(CMAKE_CUDA_STANDARD 20)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 set(CMAKE_CUDA_EXTENSIONS OFF)
 
@@ -26,9 +26,9 @@ find_package(CUDAToolkit REQUIRED)
 add_library(
     minirt_runtime
     STATIC
-    src/internal/cuda_error.cpp
-    src/internal/runtime/cuda_event.cpp
-    src/internal/runtime/cuda_stream.cpp
+    src/minirt/internal/cuda_error.cpp
+    src/minirt/internal/runtime/cuda_event.cpp
+    src/minirt/internal/runtime/cuda_stream.cpp
 )
 
 add_library(minirt::runtime ALIAS minirt_runtime)
@@ -38,7 +38,7 @@ target_include_directories(
     PUBLIC
         "${PROJECT_SOURCE_DIR}/include"
     PRIVATE
-        "${PROJECT_SOURCE_DIR}/src/internal"
+        "${PROJECT_SOURCE_DIR}/src"
 )
 
 target_link_libraries(

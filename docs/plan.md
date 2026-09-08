@@ -1,6 +1,6 @@
 # MiniRT — план разработки
 
-Версия 5.0. Цель — небольшой single-GPU C++17/CUDA inference runtime для
+Версия 5.0. Цель — небольшой single-GPU C++20/CUDA inference runtime для
 Qwen2.5-0.5B semantics и воспроизводимых kernel-экспериментов.
 Основной workflow: implement → validate → benchmark → integrate → explain.
 

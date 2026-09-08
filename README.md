@@ -9,7 +9,7 @@ Single-GPU experimental LLM inference runtime на C++/CUDA для одной de
 
 - CMake 3.25 или новее;
 - Ninja;
-- CUDA Toolkit с `nvcc`;
+- C++ компилятор и CUDA Toolkit с `nvcc`, поддерживающие C++20;
 - NVIDIA GPU и совместимый драйвер для запуска CUDA-тестов.
 
 По умолчанию CUDA-код собирается для архитектуры `75`.
@@ -24,10 +24,58 @@ cmake --build --preset debug
 ctest --preset debug --output-on-failure
 ```
 
-Основной CUDA smoke-тест после сборки можно запустить отдельно:
+## Подключение заголовков
+
+Все проектные заголовки подключаются через `<minirt/...>`:
+
+```cpp
+#include <minirt/core/cuda_error.hpp>
+#include <minirt/internal/memory/device_buffer.hpp>
+#include <minirt/internal/runtime/cuda_stream.hpp>
+#include <minirt/test/test_require.hpp>
+```
+
+Публичные заголовки находятся в `include/minirt/`. Внутренние — в
+`src/minirt/internal/`: корень `src/` подключается с видимостью `PRIVATE` к runtime
+и явно добавляется внутренним тестам. Тестовые заголовки находятся в
+`tests/support/minirt/test/` и доступны только тестовым targets.
+
+## Структура тестов
+
+```text
+tests/
+  CMakeLists.txt
+  support/minirt/test/test_require.hpp
+  runtime/runtime_wrappers_test.cpp
+  memory/device_buffer_test.cu
+```
+
+Во всех тестах используй общий макрос:
+
+```cpp
+#include <minirt/test/test_require.hpp>
+
+// Внутри тестовой функции:
+MINIRT_TEST_REQUIRE(actual == expected);
+```
+
+Он вычисляет условие один раз и при провале бросает `minirt::test::Failure`
+с текстом условия, файлом и строкой. Проверки работают в `void`-функциях и в
+Release-сборках. `main()` должен ловить `const std::exception&`, печатать
+`error.what()` и возвращать `EXIT_FAILURE`, как в существующих тестах.
+В `.cu` макрос предназначен для CPU-кода вокруг запуска kernel.
+
+Новые тесты регистрируй через `minirt_add_test` или `minirt_add_internal_test`
+в `tests/CMakeLists.txt`: оба helper-а автоматически дают доступ к общему заголовку.
+
+`memory/device_buffer_test.cu` содержит CUDA-ядро, поэтому собирается через `nvcc`.
+
+Сборка и запуск только теста буфера:
 
 ```bash
-./build/debug/minirt_cuda_smoke
+cmake --preset debug
+cmake --build --preset debug --target minirt_device_buffer
+ctest --preset debug -R '^device_buffer$' --output-on-failure
 ```
 
 ## Release-сборка и тесты
@@ -56,6 +104,12 @@ build/debug/compile_commands.json
 ```
 
 Для release-конфигурации используется `build/release/compile_commands.json`.
+
+Файл `.clangd` указывает на `build/debug`, поэтому clangd получает `-std=c++20`
+из команд компиляции CMake. После изменения стандарта достаточно выполнить
+`cmake --preset debug`; отдельно задавать стандарт в `.clangd` или настройках
+VS Code не требуется. Если редактор продолжает показывать старую диагностику,
+выполните команду `clangd: Restart language server`.
 
 Чтобы удалить старый CMake cache и заново сконфигурировать debug-сборку:
 

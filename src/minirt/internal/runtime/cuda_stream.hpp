@@ -1,11 +1,11 @@
 #pragma once
 
+#include <minirt/core/cuda_error.hpp>
+
 #include <cuda_runtime.h>
 
 #include <memory>
 #include <utility>
-
-#include <minirt/core/cuda_error.hpp>
 
 namespace minirt::internal {
 class CudaStream {
