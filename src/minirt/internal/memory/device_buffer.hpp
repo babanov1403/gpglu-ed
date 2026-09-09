@@ -25,6 +25,7 @@ template <typename T> class DeviceBuffer {
         bufferDevice_ = std::exchange(other.bufferDevice_, nullptr);
         size_ = std::exchange(other.size_, 0);
     }
+
     DeviceBuffer& operator=(DeviceBuffer&& other) {
         if (std::addressof(other) == this) {
             return *this;
