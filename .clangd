@@ -1,0 +1,8 @@
+CompileFlags:
+  CompilationDatabase: build/debug
+---
+If:
+  PathMatch: .*\.(cu|cuh)
+CompileFlags:
+  Remove: [-forward-unknown-to-host-compiler, --generate-code=*]
+  Add: [--cuda-gpu-arch=sm_75]
